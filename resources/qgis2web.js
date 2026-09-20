@@ -1,4 +1,4 @@
-// Koordinat Tampilan Awal Peta
+// Tampilan awal koordinat
 var initialExtent = [105.818460, -6.697152, 106.297101, -6.522048];
 
 var map = new ol.Map({
@@ -9,8 +9,8 @@ var map = new ol.Map({
         constrainResolution: true,
         maxZoom: 28,
         minZoom: 1,
-        rotation: 0, // Mengunci peta selalu mengarah ke Utara
-        enableRotation: false, // Mematikan opsi rotasi peta
+        rotation: 0, // Mengunci peta ke Utara
+        enableRotation: false, // Mencegah rotasi
         projection: new ol.proj.Projection({
             code: 'EPSG:4326',
             units: 'degrees'
@@ -18,10 +18,10 @@ var map = new ol.Map({
     })
 });
 
-// Fit ke Tampilan Awal
+// Fit awal
 map.getView().fit(initialExtent, map.getSize());
 
-// Menyembunyikan Layar Loading saat Peta Selesai Dimuat
+// Menyembunyikan layar loading setelah peta siap
 map.once('rendercomplete', function() {
     var loadingScreen = document.getElementById('loading-screen');
     if (loadingScreen) {
@@ -32,7 +32,7 @@ map.once('rendercomplete', function() {
     }
 });
 
-// Perubahan Kursor Pointer
+// Perubahan cursor
 function pointerOnFeature(evt) {
     if (evt.dragging) {
         return;
@@ -56,7 +56,7 @@ function styleCursorMove() {
 }
 styleCursorMove();
 
-// Container Kontrol Utama
+// Container Kontrol Peta
 var topLeftContainer = new ol.control.Control({
     element: (() => {
         var el = document.createElement('div');
@@ -93,18 +93,18 @@ var bottomRightContainer = new ol.control.Control({
 });
 map.addControl(bottomRightContainer);
 
-// Tombol Home (Kembali ke Tampilan Awal)
-var homeButton = document.createElement('div');
-homeButton.className = 'ol-control ol-home-button';
-homeButton.innerHTML = '<button title="Kembali ke Tampilan Awal"><i class="fas fa-home"></i></button>';
-homeButton.onclick = function() {
+// Penambahan Tombol Home Mandiri (Direct Control)
+var homeButtonDiv = document.createElement('div');
+homeButtonDiv.className = 'ol-control ol-home-button';
+homeButtonDiv.innerHTML = '<button title="Kembali ke Tampilan Awal"><i class="fas fa-home"></i></button>';
+homeButtonDiv.onclick = function() {
     map.getView().fit(initialExtent, {
         duration: 800
     });
 };
-map.addControl(new ol.control.Control({ element: homeButton }));
+map.addControl(new ol.control.Control({ element: homeButtonDiv }));
 
-// Popup & Overlay
+// Popup Overlays
 var container = document.getElementById('popup');
 var content = document.getElementById('popup-content');
 var closer = document.getElementById('popup-closer');
@@ -122,7 +122,7 @@ closer.onclick = function() {
     closer.blur();
     stopMediaInPopup();
     if (featureOverlay) {
-        featureOverlay.getSource().clear(); // Menghapus highlight kuning saat popup ditutup
+        featureOverlay.getSource().clear(); // Bersihkan warna kuning
     }
     return false;
 };
@@ -133,7 +133,7 @@ var overlayPopup = new ol.Overlay({
 });
 map.addOverlay(overlayPopup);
 
-// Layer Khusus untuk Highlight Warna Kuning
+// Layer Highlight Warna Kuning
 var collection = new ol.Collection();
 var featureOverlay = new ol.layer.Vector({
     map: map,
@@ -207,7 +207,7 @@ function updatePopup() {
     }
 } 
 
-// Event Klik untuk Membuka Popup dan Mengubah Warna Objek Menjadi KUNING
+// Event Klik Objek + Efek Highlight Kuning
 function onSingleClickFeatures(evt) {
     var pixel = map.getEventPixel(evt.originalEvent);
     var coord = evt.coordinate;
@@ -216,7 +216,7 @@ function onSingleClickFeatures(evt) {
     var clusteredFeatures;
     var popupText = '<ul>';
     
-    // Reset highlight kuning sebelumnya
+    // Reset highlight
     if (featureOverlay) {
         featureOverlay.getSource().clear();
     }
@@ -224,7 +224,6 @@ function onSingleClickFeatures(evt) {
     map.forEachFeatureAtPixel(pixel, function(feature, layer) {
         if (layer && feature instanceof ol.Feature && (layer.get("interactive") || layer.get("interactive") === undefined)) {
             
-            // --- WARNA KUNING SAAT DIKLIK ---
             currentFeature = feature;
             clusteredFeatures = feature.get("features");
             
@@ -265,7 +264,6 @@ function onSingleClickFeatures(evt) {
                     })
                 });
             } else {
-                // Polygon / MultiPolygon
                 highlightStyle = new ol.style.Style({
                     fill: new ol.style.Fill({
                         color: 'rgba(255, 255, 0, 1.00)' // Kuning
@@ -277,12 +275,9 @@ function onSingleClickFeatures(evt) {
                 });
             }
 
-            // Terapkan highlight kuning ke peta
             featureOverlay.getSource().addFeature(currentFeature);
             featureOverlay.setStyle(highlightStyle);
-            // --------------------------------
 
-            // Pembuatan Isi Popup
             var doPopup = false;
             for (var k in layer.get('fieldImages')) {
                 if (layer.get('fieldImages')[k] !== "Hidden") {
@@ -311,7 +306,7 @@ function onSingleClickFeatures(evt) {
                 }
             }
         }
-    }, { hitTolerance: 10 }); // Toleransi sentuhan jari di HP (10px)
+    }, { hitTolerance: 10 }); // Responsif sentuhan HP
 
     if (popupText === '<ul>') {
         popupText = '';
@@ -326,14 +321,14 @@ function onSingleClickFeatures(evt) {
 
 map.on('singleclick', onSingleClickFeatures);
 
-// Layer Switcher Control
+// Layer Switcher
 var layerSwitcher = new ol.control.LayerSwitcher({
     tipLabel: "Layers",
     target: 'top-right-container'
 });
 map.addControl(layerSwitcher);
 
-// Kontrol Atribusi (Teks qgis2web, OpenLayers, & QGIS dihapus secara permanen)
+// Kontrol Atribusi (Hapus teks bawaan permanen)
 var bottomAttribution = new ol.control.Attribution({
   collapsible: false,
   collapsed: false,
@@ -346,13 +341,13 @@ map.once('rendercomplete', function() {
   if (bottomAttributionUl) {
     var layerAttrs = Array.from(bottomAttributionUl.querySelectorAll('li'))
       .map(function(li) { return li.innerHTML.trim(); }).filter(Boolean);
-    var attribHtml = ``; // Kosong permanen
+    var attribHtml = ``;
     if (layerAttrs.length > 0) { attribHtml += layerAttrs.join(', '); }
     bottomAttributionUl.innerHTML = '<li>' + attribHtml + '</li>';
   }
 });
 
-// Mengatur Posisi Kontrol
+// Pengaturan Posisi Kontrol
 var topLeftContainerDiv = document.getElementById('top-left-container');
 var bottomLeftContainerDiv = document.getElementById('bottom-left-container');
 var bottomRightContainerDiv = document.getElementById('bottom-right-container');
