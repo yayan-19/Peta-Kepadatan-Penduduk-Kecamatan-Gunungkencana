@@ -113,129 +113,16 @@
             background-color: rgba(248, 248, 248, 0.7)!important;
         } 
         .ol-control {
-<!doctype html>
-<html lang="id" class="notranslate" translate="no">
-    <head>
-        <meta charset="utf-8">
-        <meta name="google" content="notranslate">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="stylesheet" href="./resources/ol.css">
-        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
-        <link href="resources/photon-geocoder-autocomplete.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
-        <link rel="stylesheet" href="./resources/qgis2web.css">
-        
-        <style>
-        html, body {
-            background-color: #ffffff;
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        /* Container Peta disesuaikan agar running text tidak menutupi peta */
-        #map {
-            width: 100%;
-            height: calc(100% - 35px);
-            margin-top: 35px;
-            padding: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        /* Running Text / Teks Berjalan di Atas */
-        .running-text-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 35px;
-            background-color: #ff0000; /* Background Merah */
-            color: #ffffff; /* Tulisan Putih */
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .running-text-content {
-            white-space: nowrap;
-            font-weight: bold;
-            font-size: 15px;
-            font-family: Arial, sans-serif;
-            letter-spacing: 1px;
-            animation: marquee 20s linear infinite;
-            padding-left: 100%;
-        }
-
-        @keyframes marquee {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
-        }
-
-        /* Tampilan Loading */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            transition: opacity 0.5s ease;
-        }
-
-        .spinner {
-            width: 45px;
-            height: 45px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #ff0000;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 12px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Styling Kontrol Peta */
-        .ol-control > * {
-            background-color: #f8f8f8!important;
-            color: #444444!important;
-            border-radius: 0px;
-        }
-        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
-            color: #444444!important;
-        }
-        .search-layer-input-search {
-            background-color: #f8f8f8!important;
-        }
-        .ol-control > *:focus, .ol-control >*:hover {
-            background-color: rgba(248, 248, 248, 0.7)!important;
-        } 
-        .ol-control {
             background-color: rgba(255,255,255,.4) !important;
             padding: 2px !important;
         }
 
-        /* Position Tombol Home (Sudah Diperbaiki) */
+        /* Styling Tombol Home (Relatif, Otomatis Mengikuti Posisi di Bawah Tombol -) */
         .ol-home-button {
-            top: 105px !important;
-            left: .5em !important;
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            margin-top: 4px !important;
         }
         .ol-home-button button {
             font-weight: bold;
@@ -258,9 +145,6 @@
                 width: 38px !important;
                 height: 38px !important;
                 font-size: 18px !important;
-            }
-            .ol-home-button {
-                top: 118px !important;
             }
         }
         </style>
